@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вхід до інформаційної системи</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #34495e;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 18px;
+            display: none;
+            font-size: 14px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .dashboard {
+            display: none;
+        }
+        .user-card {
+            background-color: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 4px 4px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Блок форма входу -->
+    <div id="login-block">
+        <h2>Вхід до інформаційної системи</h2>
+        <div id="error-message" class="alert alert-danger"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="studentId">Номер студентського квитка:</label>
+                <input type="text" id="studentId" placeholder="Наприклад: KB12345678">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" placeholder="Введіть пароль">
+            </div>
+            
+            <button type="submit">Увійти в кабінет</button>
+        </form>
+    </div>
+
+    <!-- Блок особистого кабінету (показується після входу) -->
+    <div id="dashboard-block" class="dashboard">
+        <h2>Особистий кабінет студента</h2>
+        <div class="user-card">
+            <p><strong>Студент:</strong> Васільєв В. О.</p>
+            <p><strong>Група:</strong> Бз-125-24-СК-1</p>
+            <p><strong>Спеціальність:</strong> 125-Кібербезпека</p>
+            <p><strong>Статус:</strong> Активний студент</p>
+        </div>
+
+        <h3>Навчальна успішність</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Дисципліна</th>
+                    <th>Оцінка</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Технології програмування</td>
+                    <td>95 (A)</td>
+                    <td>Зараховано</td>
+                </tr>
+                <tr>
+                    <td>Виявлення загроз та вразливостей у кіберпросторі</td>
+                    <td>90 (A)</td>
+                    <td>Зараховано</td>
+                </tr>
+                <tr>
+                    <td>Апаратне забезпечення інформаційних систем</td>
+                    <td>88 (B)</td>
+                    <td>Зараховано</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <br>
+        <button id="logoutBtn" style="background-color: #e74c3c;">Вийти</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Відміна стандартного відправлення форми
+
+        const studentId = document.getElementById('studentId').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const errorDiv = document.getElementById('error-message');
+
+        errorDiv.style.display = 'none';
+
+        // Перевірка 1: Обов'язкове заповнення полів
+        if (studentId === '' || password === '') {
+            errorDiv.innerText = 'Помилка: Усі поля є обов’язковими для заповнення!';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        // Перевірка 2: Мінімальна довжина номера студентського квитка (не менше 6 символів)
+        if (studentId.length < 6) {
+            errorDiv.innerText = 'Помилка: Номер студентського квитка повинен містити щонайменше 6 символів!';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        // Перевірка 3: Мінімальна довжина пароля (не менше 10 символів)
+        if (password.length < 4) {
+            errorDiv.innerText = 'Помилка: Пароль повинен бути не коротшим за 10 символи!';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        // Якщо всі перевірки пройшли успішно:
+        document.getElementById('login-block').style.display = 'none';
+        document.getElementById('dashboard-block').style.display = 'block';
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        document.getElementById('dashboard-block').style.display = 'none';
+        document.getElementById('login-block').style.display = 'block';
+        document.getElementById('loginForm').reset();
+    });
+</script>
+
+</body>
+</html>
